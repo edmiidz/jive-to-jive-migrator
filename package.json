@@ -1,0 +1,28 @@
+{
+  "name": "jive-to-jive-migrator",
+  "version": "1.0.0",
+  "description": "Jive to Jive Migrator",
+  "main": "tbd.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "migrator", "jive"
+  ],
+  "author": Nik Edmiidz",
+  "license": "ISC",
+  "dependencies": {
+    "url": "*",
+    "async": "*",
+    "dateformat": "*",
+    "fs": "^0.0.2",
+    "https": "1.0.0",
+    "mysql": "*",
+    "path": "*",
+    "request": "*",
+    "q": "*",
+    "querystring": "*",
+    "sleep": "*",
+    "striptags": "*"
+  }
+}
