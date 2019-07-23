@@ -1,28 +1,21 @@
 {
-  "name": "jive-to-jive-migrator",
+  "name": "jive-jive-migrator",
   "version": "1.0.0",
   "description": "Jive to Jive Migrator",
-  "main": "tbd.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "migrator", "jive"
+    "jive",
+    "Jive to Jive",
+    "migrator",
+    "node"
   ],
-  "author": Nik Edmiidz",
+  "author": "Kishor Kumar <kishorpapnai@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "url": "*",
     "async": "*",
-    "dateformat": "*",
-    "fs": "^0.0.2",
-    "https": "1.0.0",
-    "mysql": "*",
-    "path": "*",
-    "request": "*",
-    "q": "*",
-    "querystring": "*",
-    "sleep": "*",
-    "striptags": "*"
+    "q": "*"
   }
 }
