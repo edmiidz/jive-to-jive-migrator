@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "*",
+    "dom-parser": "^0.1.6",
     "q": "*"
   }
 }
