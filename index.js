@@ -67,13 +67,16 @@ function startMigration(){
 	       			//Only one attachment is allowed in file, so make the embedded images and attachment empty
 	       			attachments = [];
 	       			embeddedImages = [];
+	       			// trying to handle [square brackets] in file names
+	       			//var filename = encodeURI(content.name);
+	       			var filename = content.name;
 	       			var file = content.binaryURL.split(config.source.basicUrl)[1];
 	       			attachments.push({
 	       				orgimg:file, 
 	       				imgid:file,
 	       				type:'file', 
 	       				filetype :content.contentType,
-	       				name: content.name
+	       				name: filename
 	       			});					
 	       		}
 
@@ -185,7 +188,7 @@ function makeAttachments(imagesArr){
 			"name" : imagesArr[i].name, 
 			"contentType" : imagesArr[i].filetype, 
 			"doUpload": true, 
-			"url": config.proxyurl+"?host="+host+"&path="+path+"&base64="+base64+"&filetype="+imagesArr[i].filetype})
+			"url": config.proxyurl+"?host="+host+"&path="+path+"&filetype="+imagesArr[i].filetype})
 	}	
 	return attachments;
 }
@@ -265,7 +268,7 @@ function requestData(data, postdata = ""){
             });
          });
 		 if (postdata != ""){
-		 	console.log("writting data");
+		 	console.log("writing data");
 		 	req.write(postdata);
 		 }
          req.end();
