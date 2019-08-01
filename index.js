@@ -1,4 +1,4 @@
-var config 	= require('./config.example');
+var config 	= require('./config');
 var async 	= require('async');
 var q		= require('q');
 var https 	= require('https');
