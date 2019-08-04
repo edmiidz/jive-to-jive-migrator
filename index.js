@@ -30,6 +30,7 @@ function startMigration(){
 
 	requestData(sourceOpt).then(function(sourceContents){
 		async.eachSeries(sourceContents.list, function(content, callback){
+				console.log("=====================");
 				var destBlogOpt = getAuthData('destination', '/api/core/v3/places/'+config.destination.blogContainer+'/contents');
 				var destinOpt 	= getAuthData('destination', '/api/core/v3/places/'+config.destination.placeId+'/contents');		
 				console.log(content.subject);
@@ -63,7 +64,7 @@ function startMigration(){
 	       			}
 	       		}
 
-	       		if (content.type == "file"){
+	       		if (content.type == "file" || content.type == "photo"){
 	       			//Only one attachment is allowed in file, so make the embedded images and attachment empty
 	       			attachments = [];
 	       			embeddedImages = [];
@@ -92,7 +93,9 @@ function startMigration(){
 					
 					//console.log(content);
 					console.log("content.type", content.type);
-					console.log("=====================");
+					console.log("content.type", content.attachments);
+					
+					
 
 
 					requestData(options, postdata).then(function(res){
@@ -108,8 +111,26 @@ function startMigration(){
 							} else {
 								//console.log('updating the doucment', res);
 								var postdata = JSON.stringify(res);
+									
+									// a link that opens the image in lightbox						       		
+						       		var dom = parser.parseFromString(res.content.text);
+
+						       		var imglinks = dom.getElementsByTagName('a');
+						       		console.log("imglinks = ", imglinks);
+						       		var imageLinks = [];
+									for (var i in imglinks){
+										var ahref = findLinkHref(imglinks[i].attributes);
+										//console.log('asdfasdf=',decodeURIComponent(ahref));					
+										if (ahref != "") {
+											imageLinks.push({
+												orgimg: ahref,
+												name:decodeURIComponent(ahref).split('/').pop()							
+											})
+										}
+									}
+									console.log("imageLinks = ", imageLinks);
 									if (res.hasOwnProperty('attachments')){
-										postdata = updateImagesPath(postdata, embeddedImages, res.attachments);	
+										postdata = updateImagesPath(postdata, embeddedImages, res.attachments, imageLinks);	
 									}
 									options.method = "PUT";
 									options.path = res.resources.self.ref.split(config.destination.basicUrl).pop();
@@ -159,13 +180,36 @@ function findImgSrc(attrs){
     return '';
 }
 
-function updateImagesPath(postdata, embeddedImages, attachments){
+function findLinkHref(attrs){
+    for(var i in attrs){
+        if (String(attrs[i].name).toLowerCase() == 'href'){
+            return attrs[i].value;
+        }
+    }
+    return '';
+}
+
+function updateImagesPath(postdata, embeddedImages, attachments, imageLinks){
 	for(var i=0; i<embeddedImages.length; i++){
 		for (var j=0; j<attachments.length; j++){
 			if(embeddedImages[i].name == attachments[j].name){
 				//console.log("image matched ", i)
 				//console.log("found", embeddedImages[i].orgimg, postdata.indexOf(embeddedImages[i].orgimg))
 				postdata = postdata.split(embeddedImages[i].orgimg).join(attachments[j].url);
+				//console.log("replaced", attachments[j].url, postdata.indexOf(attachments[j].url))	
+			}			
+		}		
+	}
+	//console.log(postdata);
+	// Change the hyperlinks
+	for(var i=0; i<imageLinks.length; i++){
+		for (var j=0; j<attachments.length; j++){
+			if(imageLinks[i].name == attachments[j].name){
+				//console.log("image matched ", i)
+				//console.log("found", imageLinks[i].orgimg, postdata.indexOf(imageLinks[i].orgimg))
+				//postdata = postdata.split(imageLinks[i].orgimg).join(attachments[j].url.split("showImage").join());
+				postdata = postdata.split("href='"+imageLinks[i].orgimg+"'").join("");
+				postdata = postdata.split('href="'+imageLinks[i].orgimg+'"').join("");
 				//console.log("replaced", attachments[j].url, postdata.indexOf(attachments[j].url))	
 			}			
 		}		
@@ -179,10 +223,13 @@ function makeAttachments(imagesArr){
 		var host = config.source.basicUrl;
 		var base64 = config.source.base64;
 
-		if (imagesArr[i].type == "embeddedImage"){
+		if (imagesArr[i].type == "embeddedImage" && imagesArr[i].imgid != ""){
 			var path = "/api/core/v3/images/"+imagesArr[i].imgid;			
 		} else {
 			var path = imagesArr[i].imgid;	
+			if (imagesArr[i].orgimg.indexOf("/statics/")){
+				path = imagesArr[i].orgimg;
+			}
 		}		
 		attachments.push({
 			"name" : imagesArr[i].name, 
