@@ -28,7 +28,8 @@ config.database = {
      database         : "jive_jive_migrator",
      user             : "root",
      password         : "",
-     table            : "migrator_data"
+     table            : "migrator_data",
+     port             : "8889"
 }
 
  module.exports = config;
