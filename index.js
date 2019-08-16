@@ -168,7 +168,7 @@ function startMigration(){
 					var destBlogOpt = getAuthData('destination', '/api/core/v3/places/'+config.destination.blogContainer+'/contents');
 					var destinOpt 	= getAuthData('destination', '/api/core/v3/places/'+config.destination.placeId+'/contents');		
 					console.log(content.subject);
-				if (content.type != "video" && content.subject == "hhjhkhkj"){
+				if (content.type != "video"){
 					//console.log(content)
 					var embeddedImages = [];
 					var dom = parser.parseFromString(content.content.text);			
