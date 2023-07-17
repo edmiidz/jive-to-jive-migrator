@@ -17,7 +17,7 @@
   "dependencies": {
     "async": "*",
     "dom-parser": "^0.1.6",
-    "mysql": "^2.17.1",
+    "mysql": "^2.18.0",
     "q": "*"
   }
 }
